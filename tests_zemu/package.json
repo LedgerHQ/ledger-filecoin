@@ -17,7 +17,7 @@
     "test": "ts-node tests/pullImageKillOld.ts && jest"
   },
   "dependencies": {
-    "@zondax/ledger-filecoin": "^0.12.2",
+    "@zondax/ledger-filecoin": "^0.11.2",
     "@zondax/zemu": "^0.36.0"
   },
   "devDependencies": {
@@ -27,7 +27,6 @@
     "@typescript-eslint/eslint-plugin": "^5.19.0",
     "@typescript-eslint/parser": "^5.19.0",
     "@types/elliptic": "^6.4.14",
-    "@ledgerhq/hw-app-eth": "6.29.7",
     "elliptic": "^6.5.4",
     "blakejs": "^1.2.1",
     "crypto-js": "4.1.1",
@@ -43,10 +42,6 @@
     "prettier": "^2.5.1",
     "ts-node": "^10.9.1",
     "js-sha256": "0.9.0",
-    "typescript": "^4.5.3",
-    "bn.js": "^5.2.0",
-    "@ethereumjs/common": "^2.4.0",
-    "@ethereumjs/tx": "^3.2.0"
-
+    "typescript": "^4.5.3"
   }
 }
