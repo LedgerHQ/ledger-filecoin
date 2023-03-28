@@ -1,5 +1,5 @@
 /** ******************************************************************************
- *  (c) 2018 - 2022 Zondax AG
+ *  (c) 2018 - 2023 Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,16 +14,17 @@
  *  limitations under the License.
  ******************************************************************************* */
 
-import Zemu from "@zondax/zemu";
+import Zemu, { zondaxMainmenuNavigation, ButtonKind } from '@zondax/zemu'
 // @ts-ignore
 import FilecoinApp from "@zondax/ledger-filecoin";
 import {getDigest} from "./utils";
 import * as secp256k1 from "secp256k1";
 import { models, defaultOptions, PATH } from './common'
 
+jest.setTimeout(90000)
 
 describe('Standard', function () {
-  test.each(models)('can start and stop container', async function (m) {
+  test.concurrent.each(models)('can start and stop container', async function (m) {
     const sim = new Zemu(m.path);
     try {
       console.log("model: ", m.name)
@@ -33,17 +34,18 @@ describe('Standard', function () {
     }
   });
 
-  test.each(models)('main menu', async function (m) {
+  test.concurrent.each(models)('main menu', async function (m) {
     const sim = new Zemu(m.path);
     try {
-      await sim.start({...defaultOptions, model: m.name,});
-      await sim.navigateAndCompareSnapshots('.', `${m.prefix.toLowerCase()}-mainmenu`, [1, 0, 0, 4, -5])
+      await sim.start({ ...defaultOptions, model: m.name })
+      const nav = zondaxMainmenuNavigation(m.name, [1, 0, 0, 4, -5])
+      await sim.navigateAndCompareSnapshots('.', `${m.prefix.toLowerCase()}-mainmenu`, nav.schedule)
     } finally {
       await sim.close();
     }
   });
 
-  test.each(models)('get app version', async function (m) {
+  test.concurrent.each(models)('get app version', async function (m) {
     const sim = new Zemu(m.path);
     try {
       await sim.start({...defaultOptions, model: m.name,});
@@ -63,7 +65,7 @@ describe('Standard', function () {
     }
   });
 
-  test.each(models)('get address', async function (m) {
+  test.concurrent.each(models)('get address', async function (m) {
     const sim = new Zemu(m.path);
     try {
       await sim.start({...defaultOptions, model: m.name,});
@@ -87,10 +89,15 @@ describe('Standard', function () {
     }
   });
 
-  test.each(models)('show address', async function (m) {
+  test.concurrent.each(models)('show address', async function (m) {
     const sim = new Zemu(m.path);
     try {
-      await sim.start({...defaultOptions, model: m.name,});
+      await sim.start({
+        ...defaultOptions,
+        model: m.name,
+        approveKeyword: m.name === 'stax' ? 'QR' : '',
+        approveAction: ButtonKind.ApproveTapButton,
+      })
       const app = new FilecoinApp(sim.getTransport());
 
       // Derivation path. First 3 items are automatically hardened!
@@ -115,7 +122,7 @@ describe('Standard', function () {
     }
   });
 
-  test.each(models)('sign basic & verify', async function (m) {
+  test.concurrent.each(models)('sign basic & verify', async function (m) {
     const sim = new Zemu(m.path);
     try {
       await sim.start({...defaultOptions, model: m.name,});
@@ -155,7 +162,7 @@ describe('Standard', function () {
     }
   });
 
-  test.each(models)('sign basic - invalid', async function (m) {
+  test.concurrent.each(models)('sign basic - invalid', async function (m) {
     const sim = new Zemu(m.path);
     try {
       await sim.start({...defaultOptions, model: m.name,});
@@ -183,16 +190,14 @@ describe('Standard', function () {
     }
   });
 
-  test.each(models)('sign proposal expert ', async function (m) {
+  test.concurrent.each(models)('sign proposal expert ', async function (m) {
     const sim = new Zemu(m.path);
     try {
       await sim.start({...defaultOptions, model: m.name,});
       const app = new FilecoinApp(sim.getTransport());
 
       // Put the app in expert mode
-      await sim.clickRight();
-      await sim.clickBoth();
-      await sim.clickLeft();
+      await sim.toggleExpertMode();
 
       const txBlob = Buffer.from(
         "8a004300ec075501dfe49184d46adc8f89d44638beb45f78fcad259001401a000f4240430009c4430009c402581d845501dfe49184d46adc8f89d44638beb45f78fcad2590430003e80040",
@@ -229,7 +234,7 @@ describe('Standard', function () {
   });
 
 
-  test.each(models)('sign proposal -- unsupported method', async function (m) {
+  test.concurrent.each(models)('sign proposal -- unsupported method', async function (m) {
     const sim = new Zemu(m.path);
     try {
       await sim.start({...defaultOptions, model: m.name,});
@@ -259,7 +264,7 @@ describe('Standard', function () {
 
 /*
   Should reject BLS signature
-  test.each(models)('try signing using BLS - fail', async function (m) {
+  test.concurrent.each(models)('try signing using BLS - fail', async function (m) {
     const sim = new Zemu(m.path);
     try {
       await sim.start({...defaultOptions, model: m.name,});
@@ -282,7 +287,7 @@ describe('Standard', function () {
     }
   });*/
 
-  test.each(models)('test change owner', async function (m) {
+  test.concurrent.each(models)('test change owner', async function (m) {
     const sim = new Zemu(m.path);
     try {
       await sim.start({ ...defaultOptions, model: m.name, });
@@ -322,7 +327,7 @@ describe('Standard', function () {
     }
   });
 
-  test.each(models)('transfer using protocol 4 addresses', async function (m) {
+  test.concurrent.each(models)('transfer using protocol 4 addresses', async function (m) {
     const sim = new Zemu(m.path);
     try {
       await sim.start({...defaultOptions, model: m.name,});
