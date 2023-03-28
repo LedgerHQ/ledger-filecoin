@@ -1105,17 +1105,10 @@
     "@babel/runtime" "^7.10.4"
     "@ledgerhq/hw-transport" "^5.19.1"
 
-<<<<<<< Updated upstream
-"@zondax/zemu@^0.36.2":
-  version "0.36.2"
-  resolved "https://registry.yarnpkg.com/@zondax/zemu/-/zemu-0.36.2.tgz#dcc05b18a822fb5fce4fc6cdef383a74d0055c7e"
-  integrity sha512-ad5PfCsI+Yu+jj10egrj9UCVsou/W39K5EPpP/6I8ciS+zjeOqZffmAgAvWoo9G+6/PFqw0CjyTTGLZdoHl8RA==
-=======
 "@zondax/zemu@^0.39.1":
   version "0.39.1"
   resolved "https://registry.yarnpkg.com/@zondax/zemu/-/zemu-0.39.1.tgz#9366df0abe714ae6a81aff6b1df78d9ccd8e4469"
   integrity sha512-30HNrUjjAau48o496GfWPhXs1BHQu2BixTtX/WmdOU5fq3YqIIfpe8TG1aohxocbElTJkwqQywr4fR42Joz3LA==
->>>>>>> Stashed changes
   dependencies:
     "@grpc/grpc-js" "^1.8.12"
     "@grpc/proto-loader" "^0.7.5"
